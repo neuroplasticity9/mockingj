@@ -188,7 +188,7 @@ class Mockingj
     if settings.has_key?("variables")
       settings["variables"].each do |var|
         config.vm.provision "shell" do |s|
-          s.inline = "echo \"\nenv[$1] = '$2'\" >> /etc/php-fpm.d/www.conf"
+          s.inline = "echo \"\nenv[$1] = '$2'\" >> /etc/php-fpm.conf"
           s.args = [var["key"], var["value"]]
         end
 
