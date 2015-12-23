@@ -43,17 +43,23 @@ composer global require justinmoh/mockingj
 cd ~/.composer/vendor/justinmoh/mockingj/ && sh init.sh
 ```
 
-4) Configure
+4) Accessing Mockingj globally
+
+```
+alias mockingj='function __mockingj() { (cd ~/.composer/vendor/justinmoh/mockingj && vagrant $*); unset -f __mockingj; }; __mockingj'
+```
+
+5) Configure
 
 ```bash
 mockingj edit
 ```
 
-5) Edit `/etc/hosts` in host (local) machine and add the following:
+6) Edit `/etc/hosts` in host (local) machine and add the following:
 
 > 192.168.20.20     mockingj.dev
 
-6) UP!
+7) UP!
 
 ```bash
 mockingj up
