@@ -10,5 +10,6 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 $app = new Symfony\Component\Console\Application('Mockingj', '0.3.5');
 
 $app->add(new Mockingj\MakeCommand);
+$app->add(new Mockingj\EditCommand);
 
 $app->run();
