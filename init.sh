@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
-homesteadRoot=~/.homestead
+mockingjRoot=~/.mockingj
+mockingjSharedFolder=~/MockingjShared/
 
-mkdir -p "$homesteadRoot"
+mkdir -p "$mockingjRoot"
+mkdir -p "$mockingjSharedFolder"
 
-cp -i src/stubs/Homestead.yaml "$homesteadRoot/Homestead.yaml"
-cp -i src/stubs/after.sh "$homesteadRoot/after.sh"
-cp -i src/stubs/aliases "$homesteadRoot/aliases"
+cp -i src/stubs/mockingj.yaml "$mockingjRoot/mockingj.yaml"
+cp -i src/stubs/after.sh "$mockingjRoot/after.sh"
+cp -i src/stubs/aliases "$mockingjRoot/aliases"
 
-echo "Homestead initialized!"
+echo "Mockingj initialized!"
