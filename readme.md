@@ -46,13 +46,13 @@ cd ~/.composer/vendor/justinmoh/mockingj/ && sh init.sh
 4) Accessing Mockingj globally
 
 ```
-alias mockingj='function __mockingj() { (cd ~/.composer/vendor/justinmoh/mockingj && vagrant $*); unset -f __mockingj; }; __mockingj'
+echo 'alias mockingj="function __mockingj() { (cd ~/.composer/vendor/justinmoh/mockingj && vagrant \$*); unset -f __mockingj; }; __mockingj"' >> ~/.bash_profile
 ```
 
 5) Configure
 
 ```bash
-mockingj edit
+open ~/.mockingj/mockingj.yaml
 ```
 
 6) Edit `/etc/hosts` in host (local) machine and add the following:
