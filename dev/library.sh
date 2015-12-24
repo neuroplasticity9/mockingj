@@ -74,36 +74,37 @@ set -e
 #   OUTPUT ATTRIBUTES AND COLOURS                                              #
 ################################################################################
 
-ATTR_NORMAL=0
-ATTR_BOLD=1
-ATTR_UNDERLINE=4
-ATTR_BLINK=5
-#ATTR_REVERSE=7
+ATTR_BOLD=$(tput bold)
+ATTR_UNDERLINE_SET=$(tput smul)
+ATTR_UNDERLINE_UNSET=$(tput rmul)
+ATTR_BLINK=$(tput blink)
+ATTR_RESET=$(tput sgr0)
 
-COLOR_BLACK=30
-COLOR_RED=31
-COLOR_GREEN=32
-COLOR_YELLOW=33
-COLOR_BLUE=34
-COLOR_MAGENTA=35
-COLOR_CYAN=36
-COLOR_WHITE=37
+COLOR_BLACK=$(tput setaf 0)
+COLOR_RED=$(tput setaf 1)
+COLOR_GREEN=$(tput setaf 2)
+COLOR_YELLOW=$(tput setaf 3)
+COLOR_BLUE=$(tput setaf 4)
+COLOR_MAGENTA=$(tput setaf 5)
+COLOR_CYAN=$(tput setaf 6)
+COLOR_WHITE=$(tput setaf 7)
+COLOR_RESET=$(tput setaf 9)
 
-CLEAR_FONT_FORMAT="\033[0m"
+CLEAR_FONT_FORMAT="${ATTR_RESET}"
 
-font_attr="0"
-font_color="00"
-font_format=${CLEAR_FONT_FORMAT}
+font_attr="${ATTR_RESET}"   # 0
+font_color="${COLOR_RESET}" # 00
+font_format="${ATTR_RESET}" # \033[0m
 
 
 function set_font_attr() {
   case $1 in
     --normal )
-      font_attr=${ATTR_NORMAL} ;;
+      font_attr=${ATTR_RESET} ;;
     --bold )
       font_attr=${ATTR_BOLD} ;;
-    --underline )
-      font_attr=${ATTR_UNDERLINE} ;;
+#    --underline )
+#      font_attr=${ATTR_UNDERLINE_SET} ;;
     --blink )
       font_attr=${ATTR_BLINK} ;;
   esac
@@ -141,10 +142,10 @@ function set_font_format() {
   fi
 
   if [[ ${font_color} != "" ]]; then
-    color=";${font_color}"
+    color="${font_color}"
   fi
 
-  font_format="\033[${attr}${color}m"
+  font_format="${attr}${color}"
 }
 
 function reset_font_format() {
