@@ -1,15 +1,25 @@
 #!/usr/bin/env bash
 # Initial setup after insert GuestAdditions.iso in a fresh centos/7 image.
 
-sudo yum install epel-release && \
- sudo yum upgrade && \
- sudo yum install install gcc kernel-devel kernel-headers dkms make bzip2 perl
+BASE_DIR="${BASH_SOURCE%/*}"
+if [[ ! -d "$BASE_DIR" ]]; then BASE_DIR="$PWD"; fi
+source ${BASE_DIR}/library.sh
 
+function initial_setup() {
+  progress "Preparing VM..."
+  sudo yum install -y epel-release && \
+    sudo yum -y upgrade && \
+    sudo yum install -y gcc kernel-devel kernel-headers dkms make bzip2 perl
+}
 
-echo "# Nginx Pre-Built Packages for Mainline version
-# http://nginx.org/en/linux_packages.html
-[nginx]
-name=nginx repo
-baseurl=http://nginx.org/packages/mainline/centos/7/\$basearch/
-gpgcheck=0
-enabled=1" | sudo tee /etc/yum.repos.d/nginx.repo
+function install_guest_additions() {
+  progress "Install Guest Additions"
+  sudo mount /dev/sr0 /mnt && \
+    sudo sh /mnt/VBoxLinuxAdditions.run && \
+    sudo umount /mnt
+}
+
+script_started
+initial_setup
+install_guest_additions
+script_ended
