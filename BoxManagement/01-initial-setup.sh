@@ -3,20 +3,25 @@
 
 BASE_DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$BASE_DIR" ]]; then BASE_DIR="$PWD"; fi
-source ${BASE_DIR}/library.sh
+source "${BASE_DIR}/library.sh"
+
 
 function initial_setup() {
-  progress "Preparing VM..."
-  sudo yum install -y epel-release && \
+  progress "Preparing VM..." && \
+    sudo yum install -y epel-release && \
     sudo yum -y upgrade && \
     sudo yum install -y gcc kernel-devel kernel-headers dkms make bzip2 perl
 }
 
 function install_guest_additions() {
-  progress "Install Guest Additions"
-  sudo mount /dev/sr0 /mnt && \
+  progress "Install Guest Additions" && \
+    sudo mount /dev/sr0 /mnt && \
     sudo sh /mnt/VBoxLinuxAdditions.run && \
     sudo umount /mnt
+}
+
+function install_other_utilities() {
+  sudo yum install -y expect
 }
 
 script_started

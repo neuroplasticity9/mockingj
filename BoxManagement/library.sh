@@ -3,7 +3,11 @@
 BASE_DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$BASE_DIR" ]]; then BASE_DIR="$PWD"; fi
 
-PROGNAME=$(basename ${BASE_DIR})
+# this script name
+LIBNAME=$(basename "${BASH_SOURCE[0]}")
+
+# the script name that sourced this file
+PROGNAME=$(basename "${0}")
 
 
 ################################################################################
@@ -39,26 +43,29 @@ function unexpected_termination() {
 
 # Print message when script error occurs.
 function termination_on_error() {
-  trap : 0
-
   redirected_stderr
-
   format_output "Script terminated on error. Exiting..." --red --bold
-
   clean_up
+
+  trap : 0
   exit 1
 }
 
 # Manually exit with error message.
 # Usage : error_exit [ message ]
 function error_exit() {
-
   format_output "  ${1:-"Unknown Error"}" --red --bold
-
   clean_up
 
   trap : 0
+  exit 1
+}
 
+function warning_exit() {
+  format_output "  ${1:-"Unknown Error"}" --yellow --bold
+  clean_up
+
+  trap : 0
   exit 1
 }
 
@@ -186,6 +193,10 @@ function format_output() {
 #   Public Domain                                                              #
 ################################################################################
 
+function progress_title() {
+  format_output "  $1" --green --bold
+}
+
 function progress() {
   format_output "  $1" --green
 }
@@ -205,4 +216,30 @@ function script_ended() {
 
   trap : 0
   exit 1
+}
+
+
+################################################################################
+#   Package Installation Globals                                               #
+################################################################################
+
+YUM_REPO_DIR="/etc/yum.repos.d"
+
+function activate_service() {
+  if [[ "$1" = "" ]]; then error_exit "Scripting error: ${FUNCNAME} requires 1 argument - service name"; fi
+  sudo systemctl start $1 && \
+    sudo systemctl enable $1 && \
+    progress "...... $1 is configured and enabled."
+}
+
+function restart_service() {
+  if [[ "$1" = "" ]]; then error_exit "Scripting error: ${FUNCNAME} requires 1 argument - service name"; fi
+  sudo systemctl restart $1 && \
+    progress "...... $1 has been restarted."
+}
+
+function check_service_is_active() {
+  if [[ "$1" = "" ]]; then error_exit "Scripting error: ${FUNCNAME} requires 1 argument - service name"; fi
+  status=$(systemctl is-active $1 )
+  if [[ "${status}" = "active" ]]; then warning_exit "Service already active. Exiting..."; fi
 }
