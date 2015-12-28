@@ -15,12 +15,12 @@ A php composer package partially integrate with **vagrant** with easy-customisab
 * Postgresql 9.4
 * Sqlite 3.7
 * PHP 7.0.1
+* Xdebug
 * Composer
   * Composer Path: /usr/local/bin/composer
   * Vendor Path: ~/.composer/vendor/bin
 * Git 2.6.3
 * NodeJS v5
-* Xdebug
 
 
 ## Installation

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+ROOT_DIR=$(dirname $(readlink -f $BASH_SOURCE))
+
 BASE_DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$BASE_DIR" ]]; then BASE_DIR="$PWD"; fi
 
@@ -8,7 +10,6 @@ LIBNAME=$(basename "${BASH_SOURCE[0]}")
 
 # the script name that sourced this file
 PROGNAME=$(basename "${0}")
-
 
 ################################################################################
 #   ERRORS AND TRAPS                                                           #
@@ -224,22 +225,113 @@ function script_ended() {
 ################################################################################
 
 YUM_REPO_DIR="/etc/yum.repos.d"
+SED_LOG="${ROOT_DIR}/sed-output.log"
+
+function add_manageable_service() {
+  [[ "$1" = "" ]] && error_exit "Scripting error: ${FUNCNAME} requires argument 1 - an installed service name."
+
+  installed=$(systemctl list-units | grep $1)
+  [[ "${installed}" = "" ]] && error_exit "Scripting error: ${FUNCNAME} requires argument 1 - an installed service name."
+
+  log_file="${ROOT_DIR}/manageable-service"
+  [[ ! -f "${log_file}" ]] && touch ${log_file}
+
+  service_added=0
+  for service in $(cat ${log_file})
+  do
+    [[ ${service} == $1 ]] && service_added=1
+  done
+
+  if [[ ${service_added} != 1 ]]
+  then
+    echo "$1" >> ${log_file} &&
+      progress "\"$1\" : added into ${log_file}"
+#  else
+#    warning "Already exist in ${log_file} : $1. Skipping..."
+  fi
+}
 
 function activate_service() {
   if [[ "$1" = "" ]]; then error_exit "Scripting error: ${FUNCNAME} requires 1 argument - service name"; fi
   sudo systemctl start $1 && \
     sudo systemctl enable $1 && \
-    progress "...... $1 is configured and enabled."
+    progress "Service activated: $1"
+    add_manageable_service $1
 }
 
 function restart_service() {
   if [[ "$1" = "" ]]; then error_exit "Scripting error: ${FUNCNAME} requires 1 argument - service name"; fi
   sudo systemctl restart $1 && \
-    progress "...... $1 has been restarted."
+    progress "Service restarted: $1"
 }
 
 function check_service_is_active() {
   if [[ "$1" = "" ]]; then error_exit "Scripting error: ${FUNCNAME} requires 1 argument - service name"; fi
   status=$(systemctl is-active $1 )
   if [[ "${status}" = "active" ]]; then warning_exit "Service already active. Exiting..."; fi
+}
+
+function substitute_or_print_warning() {
+  if [[ $# != 3 ]]; then error_exit "Scripting error: ${FUNCNAME} requires 3 arguments - target, substitute and path"; fi
+  target_string="$1"
+  substitute="$2"
+  file_path="$3"
+  occurrences=$( grep -E ${target_string} ${file_path} | wc -l )
+  if [[ ${occurrences} == 1 ]]
+  then
+    sudo sed -i -r "s/${target_string}/\10/" ${file_path} && \
+      progress "Changed configuration [${target_string}] to [${substitute}]"
+  else
+    warning "Could not find config pattern [${target_string}] in ${file_path}. \n\tSkipping..."
+  fi
+
+}
+
+# Credits to Nublall@stackoverflow.com [http://stackoverflow.com/a/25054222/4520373]
+function watch_dir() {
+  if [[ "$1" = "" ]]; then error_exit "Scripting error: ${FUNCNAME} requires argument 1 - directory watch stage [ start | end ]"; fi
+
+  case $1 in
+    --start )
+      # blah blah blah
+      ;;
+    --end )
+      # blah blah blah
+      ;;
+    * )
+      error_exit "Scripting error: ${FUNCNAME} requires argument 1 - directory watch stage [ start | end ]"
+  esac
+
+  shift
+  if [[ "$1" = "" ]]; then error_exit "Scripting error: ${FUNCNAME} requires argument 2 - directory path";
+  elif [[ ! -d $1 ]]; then error_exit "${FUNCNAME}: Path $1 does not exist."; fi
+
+  # Directory you want to watch
+  watch_dir="$1"
+  # Name of the file that will keep the list of the files when you last checked it
+  last_dir="${watch_dir}/last_dir_content.tmp"
+  # Name of the file that will keep the list of the files you are checking now
+  curr_dir="${watch_dir}/curr_dir_content.tmp"
+
+  # The first time we create the log file
+  touch "${last_dir}"
+
+  find "${watch_dir}" -type f > "${curr_dir}"
+
+  diff "${last_dir}" "${curr_dir}" > /dev/null 2>&1
+
+  # If there is no difference exit
+  if [ $? -eq 0 ]
+  then
+    echo "No changes"
+  else
+    # Else, list the files that changed
+    echo "List of new files"
+    diff $last_dir $curr_dir | grep '^>'
+    echo "List of files removed"
+    diff $last_dir $curr_dir | grep '^<'
+
+    # Lastly, move CURRENT to LAST
+    mv $curr_dir $last_dir
+  fi
 }
