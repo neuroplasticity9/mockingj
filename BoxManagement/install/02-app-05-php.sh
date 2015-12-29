@@ -11,9 +11,9 @@ this_package_name="php"
 # rpm -qa remi*
 # sudo rpm -e remi{whatever it shows}
 
+# Repository available at [http://rpms.remirepo.net/wizard/]
 function add_repo_for_php() {
   repo="${YUM_REPO_DIR}/remi*.repo"
-
   if ( ls ${repo} 1>/dev/null 2>&1 );
   then
     warning "Files ${repo} already exist. \n\tSkipping..."
@@ -128,17 +128,17 @@ function configure_php() {
   fi
 
   # Configure Xdebug
-  target_string='^; Enable xdebug extension module$'
-  substitute='0666'
-  config_path="$( ls /etc/php.d/*xdebug.ini )"
-  sudo sed -i -r "s|${target_string}|\1${substitute}|w ${SED_LOG}" ${config_path}
-  if [[ -s ${SED_LOG} ]]
-  then
-    modified=$( cat ${SED_LOG} )
-    progress "Changed config patterned [${target_string}] to [${modified}] in ${config_path}."
-  else
-    warning "Could not find config pattern [${target_string}] in ${config_path}. \n\tSkipping..."
-  fi
+#  target_string='^; Enable xdebug extension module$'
+#  substitute=''
+#  config_path="$( ls /etc/php.d/*xdebug.ini )"
+#  sudo sed -i -r "s|${target_string}|\1${substitute}|w ${SED_LOG}" ${config_path}
+#  if [[ -s ${SED_LOG} ]]
+#  then
+#    modified=$( cat ${SED_LOG} )
+#    progress "Changed config patterned [${target_string}] to [${modified}] in ${config_path}."
+#  else
+#    warning "Could not find config pattern [${target_string}] in ${config_path}. \n\tSkipping..."
+#  fi
 
   # Configure Xdebug
   config_path="$( ls /etc/php.d/*xdebug.ini )"
@@ -152,17 +152,13 @@ xdebug.remote_port=10000
 ; see http://xdebug.org/docs/all_settings'
 
   current_content="$(cat ${config_path})"
-  if [[ "${current_content}" =~ ${content} ]]
+  if [[ ! "${current_content}" =~ ${content} ]]
   then
     echo "${content}" | sudo tee ${config_path} && \
-      progress "Changed Xdebug config to default values in ${config_path}."
+      progress "Xdebug config has been set to default values in ${config_path}."
   else
-    warning "Xdebug config values already set to default in ${config_path}. \n\tSkipping..."
+    warning "Xdebug config is already the default values in ${config_path}. \n\tSkipping..."
   fi
-  echo -e $current_content
-  echo -e $content
-  diff "${current_content}" "${content}"
-
 
 }
 

@@ -40,13 +40,12 @@ function restart_sqlite() {
 }
 
 function setup_sqlite() {
-  check_service_is_active "${this_package_name}.service" && \
-    "add_repo_for_${this_package_name}" && \
-    "install_${this_package_name}" && \
-    "preconfig_${this_package_name}" && \
-    "activate_${this_package_name}" && \
-    "configure_${this_package_name}" && \
-    "restart_${this_package_name}"
+  "add_repo_for_${this_package_name}" && \
+  "install_${this_package_name}" && \
+  "preconfig_${this_package_name}" && \
+  "activate_${this_package_name}" && \
+  "configure_${this_package_name}" && \
+  "restart_${this_package_name}"
 }
 
 script_started

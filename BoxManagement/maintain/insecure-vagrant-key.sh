@@ -3,9 +3,9 @@
 # Get vagrant insecure public key and completely replace content of
 # ~/.ssh/authorized_keys.
 
-BASE_DIR="${BASH_SOURCE%/*}"
-if [[ ! -d "$BASE_DIR" ]]; then BASE_DIR="$PWD"; fi
-source ${BASE_DIR}/library.sh
+SCRIPT_DIR="${BASH_SOURCE%/*}"
+if [[ ! -d "$SCRIPT_DIR" ]]; then SCRIPT_DIR="$PWD"; fi
+source "${SCRIPT_DIR}/../library.sh"
 
 SSH_FOLDER="/home/vagrant/.ssh"
 SSH_AUTH="${SSH_FOLDER}/authorized_keys"
@@ -55,5 +55,5 @@ function main() {
 }
 
 script_started
-main $1 2>${BASE_DIR}/err.tmp
+main $1 2>${ROOT_DIR}/err.tmp
 script_ended

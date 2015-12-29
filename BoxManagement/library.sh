@@ -18,7 +18,7 @@ PROGNAME=$(basename "${0}")
 
 # Remove all .tmp files
 function clean_up() {
-  rm -rf ${BASE_DIR}/*.tmp
+  rm -rf ${ROOT_DIR}/*.tmp
   tput sgr0
 }
 
@@ -225,7 +225,7 @@ function script_ended() {
 ################################################################################
 
 YUM_REPO_DIR="/etc/yum.repos.d"
-SED_LOG="${ROOT_DIR}/sed-output.log"
+SED_LOG="${ROOT_DIR}/sed-output.tmp"
 
 function add_manageable_service() {
   [[ "$1" = "" ]] && error_exit "Scripting error: ${FUNCNAME} requires argument 1 - an installed service name."
@@ -233,7 +233,7 @@ function add_manageable_service() {
   installed=$(systemctl list-units | grep $1)
   [[ "${installed}" = "" ]] && error_exit "Scripting error: ${FUNCNAME} requires argument 1 - an installed service name."
 
-  log_file="${ROOT_DIR}/manageable-service"
+  log_file="${ROOT_DIR}/manageable-services-list"
   [[ ! -f "${log_file}" ]] && touch ${log_file}
 
   service_added=0

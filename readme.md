@@ -7,19 +7,18 @@ A php composer package partially integrate with **vagrant** with easy-customisab
 
 ## Includes
 
+* CentOS 7.2
 * VirtualBox Guest Additions (v5.0.12)
-* Nginx (Mainline)
+* Nginx (Mainline 1.9.x)
 * MariaDB 10.1
   * Username: mockingj
   * Password: secret
 * Postgresql 9.4
-* Sqlite 3.7
+* Sqlite 3.9
 * PHP 7.0.1
 * Xdebug
 * Composer
-  * Composer Path: /usr/local/bin/composer
-  * Vendor Path: ~/.composer/vendor/bin
-* Git 2.6.3
+* Git 2.6.4
 * NodeJS v5
 
 

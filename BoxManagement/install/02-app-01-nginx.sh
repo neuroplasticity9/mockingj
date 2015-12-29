@@ -74,6 +74,19 @@ function configure_nginx() {
       progress "Created directory: ${dir}"
     fi
   done
+
+  # Read site settings from site-enabled directory
+  target_string='^(\s*)(include\s+/etc/nginx/conf\.d/\*\.conf;\n+?\s*?)(})$'
+  substitute='${1}include /etc/nginx/site-enabled/\*;${1}server_names_hash_bucket_size 64;\n'
+  config_path='/etc/nginx/nginx.conf'
+  sudo perl -i -pe 'BEGIN{undef $/;} s|'"${target_string}"'|$1$2'"${substitute}"'$3|m && $M++;END{exit 1 unless $M>0}' ${config_path}
+  if [[ $? == 0 ]]
+  then
+    progress 'Added config to read site from site-enabled directory in '"${config_path}"'.'
+  else
+    warning 'Could not find the specified config pattern or already configured in '"${config_path}"'. \n\tSkipping...'
+  fi
+
 }
 
 function restart_nginx() {

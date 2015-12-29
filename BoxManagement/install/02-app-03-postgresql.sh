@@ -7,18 +7,21 @@ source "${SCRIPT_DIR}/../library.sh"
 
 this_package_name="postgresql"
 
+# Available packages: [http://yum.postgresql.org/repopackages.php]
 function add_repo_for_postgresql () {
-  repo="${YUM_REPO_DIR}/pgdg-94-redhat.repo"
+  repo="${YUM_REPO_DIR}/pgdg-94-centos.repo"
   if [[ -f "${repo}" ]]
   then
     warning "File ${repo} already exists. \n\tSkipping..."
   else
-    sudo yum install -y http://yum.postgresql.org/9.4/redhat/rhel-6-x86_64/pgdg-redhat94-9.4-1.noarch.rpm && \
+    sudo yum install -y http://yum.postgresql.org/9.4/redhat/rhel-7-x86_64/pgdg-centos94-9.4-2.noarch.rpm && \
       progress "YUM Repository for ${this_package_name} created at ${repo}."
   fi
 }
 
+# Installation instruction: [http://www.postgresql.org/download/linux/redhat/]
 function install_postgresql() {
+
   installed=$( yum list installed | grep "${this_package_name}" )
   if [[ "${installed}" != "" && "${installed}" =~ '@pgdg94' ]]
   then
@@ -57,6 +60,11 @@ function configure_postgresql() {
 
 function restart_postgresql() {
   restart_service "postgresql-9.4.service"
+}
+
+function uninstall_postgresql() {
+  sudo yum remove -y postgresql94* && \
+    sudo rm -rf "${YUM_REPO_DIR}/pgdg-94-centos.repo"
 }
 
 function setup_postgresql() {
