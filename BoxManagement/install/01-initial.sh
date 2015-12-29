@@ -19,7 +19,7 @@ function install_guest_additions() {
   then
     warning "Guest Additions already installed. \n\tSkipping"
   else
-    progress "Installing Guest Additions" && \
+    progress "Installing Guest Additions..." && \
       sudo mount /dev/sr0 /mnt && \
       sudo sh /mnt/VBoxLinuxAdditions.run && \
       sudo umount /mnt
@@ -47,13 +47,14 @@ function misc_configuration() {
   fi
 
   # Clean up old kernel versions and keep only 2 most recent kernels
-  configured=$( grep 'installonly_limit=2' /etc/yum.conf )
-  if [[ "${configured}" != "" ]]
+  limit=$(grep -e 'installonly_limit=2' /etc/yum.conf)
+  if [[ "${limit}" != "" ]]
   then
     warning "Old kernel limit already set. \n\tSkipping..."
   else
     sudo package-cleanup --oldkernels --count=2 && \
-    sudo sed -i 's/(installonly_limit)=5/\1=2/' /etc/yum.conf
+      sudo sed -i 's/(installonly_limit)=5/\1=2/' /etc/yum.conf && \
+      progress "Kernel limit set to 2."
   fi
 }
 
