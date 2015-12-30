@@ -226,6 +226,7 @@ function script_ended() {
 
 YUM_REPO_DIR="/etc/yum.repos.d"
 SED_LOG="${ROOT_DIR}/sed-output.tmp"
+BASH_PROFILE_PATH="${HOME}/.bash_profile"
 
 function add_manageable_service() {
   [[ "$1" = "" ]] && error_exit "Scripting error: ${FUNCNAME} requires argument 1 - an installed service name."

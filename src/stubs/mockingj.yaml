@@ -15,10 +15,10 @@ folders:
 
 sites:
     - map: mockingj.dev
-      to: /home/vagrant/shared/landbarRevamped/public
+      to: /home/vagrant/shared/laravel51/public
 
 databases:
-    - homestead
+    - mockingj
 
 # blackfire:
 #     - id: foo

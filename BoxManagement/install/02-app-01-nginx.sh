@@ -79,8 +79,8 @@ function configure_nginx() {
   target_string='^(\s*)(include\s+/etc/nginx/conf\.d/\*\.conf;\n+?\s*?)(})$'
   substitute='${1}include /etc/nginx/sites-enabled/\*;${1}server_names_hash_bucket_size 64;\n'
   config_path='/etc/nginx/nginx.conf'
-  sudo perl -i -pe 'BEGIN{undef $/;} s|'"${target_string}"'|$1$2'"${substitute}"'$3|m && $M++;END{exit 1 unless $M>0}' ${config_path}
-  if [[ $? == 0 ]]
+  sudo perl -i -pe 'BEGIN { undef $/; open F, ">'"${SED_LOG}"'" } print F $_ if s|'"${target_string}"'|$1$2'"${substitute}"'$3|m ' ${config_path}
+  if [[ -s ${SED_LOG} ]]
   then
     progress 'Added config to read site from site-enabled directory in '"${config_path}"'.'
   else

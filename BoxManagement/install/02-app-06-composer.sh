@@ -27,7 +27,7 @@ function preconfig_composer() {
   if [[ -f composer.phar ]]
   then
     sudo mv composer.phar /usr/local/bin/composer && \
-      if [[ ! $PATH =~ '/usr/local/bin' ]]; then echo 'export PATH=$PATH:/usr/local/bin' >> ~/.bash_profile; fi
+      if [[ ! $PATH =~ '/usr/local/bin' ]]; then echo 'export PATH=$PATH:/usr/local/bin' >> ${BASH_PROFILE_PATH}; fi
   fi
 }
 
@@ -36,6 +36,19 @@ function activate_composer() {
 }
 
 function configure_composer() {
+  # Set composer global bin path in bash_profile
+  result=$( grep -E '^PATH=.*\.composer\/vendor\/bin(?::|$)' ${BASH_PROFILE_PATH} )
+  if [[ "${result}" = "" ]]
+  then
+    result=$( grep -E '^export\s+PATH(?:\s|$)' ${BASH_PROFILE_PATH} )
+    [[ "${result}" = "" ]] && echo 'export PATH' >> ${BASH_PROFILE_PATH}
+    path='PATH=\$PATH:\$HOME/.composer/vendor/bin'
+    perl -i -pe '/export\s+PATH/ and $_ = "'${path}'\n$_" ' ${BASH_PROFILE_PATH} && \
+      progress "Composer path added into ${BASH_PROFILE_PATH}."
+  else
+    warning "Composer path already set in ${BASH_PROFILE_PATH}: ${result} \n\tSkipping..."
+  fi
+
   # Disable Xdebug loading from php
   target_string='^(zend_extension=xdebug.so)$'
   substitute=';\1'
@@ -50,13 +63,13 @@ function configure_composer() {
   fi
 
   # Set alias for php to run with Xdebug loaded explicitly
-  profile=$( cat ~/.bash_profile )
-  if [[ "${profile}" =~ "alias php='php -dzend_extension=xdebug.so'" ]]
+  result=$( grep -E "^alias php='php -dzend_extension=xdebug\.so'$" ${BASH_PROFILE_PATH} )
+  if [[ "${result}" = "" ]]
   then
-    warning "Alias 'php' already set."
-  else
-    echo "alias php='php -dzend_extension=xdebug.so'" >> ~/.bash_profile &&
+    echo "alias php='php -dzend_extension=xdebug.so'" >> ${BASH_PROFILE_PATH} && \
       progress "Alias 'php' set to load xdebug explicitly."
+  else
+    warning "Alias 'php' already set. \n\tSkipping..."
   fi
 
 }

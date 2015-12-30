@@ -1,9 +1,8 @@
 # Mockingj
 
-Simplified and customized [Laravel/Homestead](https://github.com/laravel/homestead) for [CentOS 7](https://www.centos.org) in VirtualBox environment.
+A fork on [Laravel/Homestead](https://github.com/laravel/homestead) in [CentOS 7](https://www.centos.org) in VirtualBox VM Environment.
 
-A php composer package partially integrate with **vagrant** with easy-customisable box configuration.
-
+Mockingj is a wrapper of `vagrant` command, developed to be used together with [Mockingj Vagrant Box](https://atlas.hashicorp.com/justinmoh/mockingj).
 
 ## Includes
 
@@ -20,6 +19,7 @@ A php composer package partially integrate with **vagrant** with easy-customisab
 * Composer
 * Git 2.6.4
 * NodeJS v5
+* Laravel 5.1
 
 
 ## Installation
