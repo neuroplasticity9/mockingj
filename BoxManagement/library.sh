@@ -287,51 +287,17 @@ function substitute_or_print_warning() {
 
 }
 
-# Credits to Nublall@stackoverflow.com [http://stackoverflow.com/a/25054222/4520373]
-function watch_dir() {
-  if [[ "$1" = "" ]]; then error_exit "Scripting error: ${FUNCNAME} requires argument 1 - directory watch stage [ start | end ]"; fi
-
-  case $1 in
-    --start )
-      # blah blah blah
-      ;;
-    --end )
-      # blah blah blah
-      ;;
-    * )
-      error_exit "Scripting error: ${FUNCNAME} requires argument 1 - directory watch stage [ start | end ]"
-  esac
-
-  shift
-  if [[ "$1" = "" ]]; then error_exit "Scripting error: ${FUNCNAME} requires argument 2 - directory path";
-  elif [[ ! -d $1 ]]; then error_exit "${FUNCNAME}: Path $1 does not exist."; fi
-
-  # Directory you want to watch
-  watch_dir="$1"
-  # Name of the file that will keep the list of the files when you last checked it
-  last_dir="${watch_dir}/last_dir_content.tmp"
-  # Name of the file that will keep the list of the files you are checking now
-  curr_dir="${watch_dir}/curr_dir_content.tmp"
-
-  # The first time we create the log file
-  touch "${last_dir}"
-
-  find "${watch_dir}" -type f > "${curr_dir}"
-
-  diff "${last_dir}" "${curr_dir}" > /dev/null 2>&1
-
-  # If there is no difference exit
-  if [ $? -eq 0 ]
-  then
-    echo "No changes"
-  else
-    # Else, list the files that changed
-    echo "List of new files"
-    diff $last_dir $curr_dir | grep '^>'
-    echo "List of files removed"
-    diff $last_dir $curr_dir | grep '^<'
-
-    # Lastly, move CURRENT to LAST
-    mv $curr_dir $last_dir
-  fi
+spinner() {
+  local pid=$!
+  local delay=0.75
+  local spinstr='...'
+  echo " "
+  while [ "$( ps a | awk '{print $1}' | grep $pid )" ]; do
+    local temp=${spinstr#?}
+    printf "%s  " "$spinstr"
+    local spinstr=${temp}${spinstr%"${temp}"}
+    sleep ${delay}
+    printf "\b\b\b"
+  done
+  printf "    \b\b\b\b"
 }
