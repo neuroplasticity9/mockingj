@@ -63,7 +63,7 @@ function configure_nginx() {
   fi
 
   # Add site-available & site-enabled directories
-  required_dir="/etc/nginx/site-available /etc/nginx/site-enabled"
+  required_dir="/etc/nginx/sites-available /etc/nginx/sites-enabled"
   for dir in ${required_dir}
   do
     if [[ -d ${dir} ]]
@@ -77,7 +77,7 @@ function configure_nginx() {
 
   # Read site settings from site-enabled directory
   target_string='^(\s*)(include\s+/etc/nginx/conf\.d/\*\.conf;\n+?\s*?)(})$'
-  substitute='${1}include /etc/nginx/site-enabled/\*;${1}server_names_hash_bucket_size 64;\n'
+  substitute='${1}include /etc/nginx/sites-enabled/\*;${1}server_names_hash_bucket_size 64;\n'
   config_path='/etc/nginx/nginx.conf'
   sudo perl -i -pe 'BEGIN{undef $/;} s|'"${target_string}"'|$1$2'"${substitute}"'$3|m && $M++;END{exit 1 unless $M>0}' ${config_path}
   if [[ $? == 0 ]]

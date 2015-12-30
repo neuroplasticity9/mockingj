@@ -45,7 +45,7 @@ cd ~/.composer/vendor/justinmoh/mockingj/ && sh init.sh
 4) Accessing Mockingj globally
 
 ```
-echo 'alias mockingj="function __mockingj() { (cd ~/.composer/vendor/justinmoh/mockingj && vagrant \$*); unset -f __mockingj; }; __mockingj"' >> ~/.bash_profile
+echo 'alias mockingj="function __mockingj() { (cd ~/.composer/vendor/justinmoh/mockingj && vagrant \$*); unset -f __mockingj; }; __mockingj"' >> ~/.bash_profile && source ~/.bash_profile
 ```
 
 5) Configure

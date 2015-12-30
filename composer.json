@@ -19,6 +19,6 @@
     }
   },
   "bin": [
-    "mockingj"
+    "MockingjConsole"
   ]
 }
