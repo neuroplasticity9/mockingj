@@ -88,6 +88,19 @@ function configure_php() {
     warning "Could not find config pattern [${target_string}] in ${config_path}. \n\tSkipping..."
   fi
 
+  # Change listening port to unix socket
+  target_string='^(listen\s+=\s+)127\.0\.0\.1:9000$'
+  substitute='/var/run/php-fpm/php-fpm.sock'
+  config_path="/etc/php-fpm.d/www.conf"
+  sudo sed -i -r "s|${target_string}|\1${substitute}|w ${SED_LOG}" ${config_path}
+  if [[ -s ${SED_LOG} ]]
+  then
+    modified=$( cat ${SED_LOG} )
+    progress "Changed config patterned [${target_string}] to [${modified}] in ${config_path}."
+  else
+    warning "Could not find config pattern [${target_string}] in ${config_path}. \n\tSkipping..."
+  fi
+
   # Change listening owner for unix socket for php-fpm
   target_string='^;(listen.owner\s+=\s+)nobody$'
   substitute='vagrant'
