@@ -6,21 +6,27 @@ if [[ ! -d "$SCRIPT_DIR" ]]; then SCRIPT_DIR="$PWD"; fi
 source "${SCRIPT_DIR}/../library.sh"
 
 function install_laravel() {
-  # Locate installation at /home/vagrant/shared/
-  installation_dir="${HOME}/shared"
-  project_name="laravel51"
+  # Installation directory and version
+  installation_path="${HOME}/shared/laravel51"
   laravel_version="5.1.*"
-  [[ ! -d ${installation_dir} ]] && mkdir -p ${installation_dir} && \
-    progress "Directory created: ${installation_dir}"
 
-  if [[ -d "${installation_dir}/${project_name}" && ! "$( ls -A "${installation_dir}/${project_name}" )" ]]
-  then
-    rm -rf "${installation_dir}/${project_name}" && \
-      progress "Removed empty directory: ${installation_dir}/${project_name}"
-  fi
+#  # Case if directory exists
+#  if [[ -d "${installation_path}" ]]
+#  then
+#    # If exist and not empty
+#    if [[ ! "$( ls -A "${installation_path}" )" ]]
+#    then
+#      rm -rf "${installation_path}" && \
+#        progress "Removed directory: ${installation_path}"
+#    else
+#      rm -rf "${installation_path}" && \
+#        progress "Removed empty directory: ${installation_path}"
+#    fi
+#  fi
 
-  composer -vvv create-project laravel/laravel "${installation_dir}/${project_name}" "${laravel_version}" && \
-    progress "Laravel ${laravel_version} installed at ${installation_dir}/${project_name}."
+  mkdir -p "${HOME}/shared/" && \
+  composer -vvv create-project laravel/laravel ${installation_path} ${laravel_version} && \
+    progress "Laravel ${laravel_version} installed at ${installation_path}."
 }
 
 function configure_laravel() {
