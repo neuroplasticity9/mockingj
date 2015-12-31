@@ -19,7 +19,6 @@ Mockingj is a wrapper of `vagrant` command, developed to be used together with [
 * Composer
 * Git 2.6.4
 * NodeJS v5
-* Laravel 5.1
 
 
 ## Installation
@@ -39,7 +38,7 @@ composer global require justinmoh/mockingj
 3) Init the application
 
 ```bash
-cd ~/.composer/vendor/justinmoh/mockingj/ && sh init.sh
+cd ~/.composer/vendor/justinmoh/mockingj/ && bash init.sh
 ```
 
 4) Accessing Mockingj globally

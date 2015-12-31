@@ -131,15 +131,17 @@ class MakeCommand extends Command
      */
     protected function configurePaths()
     {
-        $yaml = str_replace('- map: ~/MockingjShared',
+        $yaml = str_replace(
+            '- map: ~/MockingjShared',
             '- map: "' . str_replace('\\', '/', $this->basePath) . '"',
             $this->getMockingjFile());
 
-        $yaml = str_replace('to: /home/vagrant/shared',
+        $yaml = str_replace(
+            'to: /home/vagrant/shared',
             'to: "/home/vagrant/' . $this->defaultName . '"', $yaml);
 
         // Fix path to the public folder (sites: to:)
-        $yaml = str_replace($this->defaultName . '"/Laravel/public',
+        $yaml = str_replace($this->defaultName . '"/laravel51/public',
             $this->defaultName . '/public"', $yaml);
 
         file_put_contents($this->basePath . '/mockingj.yaml', $yaml);
@@ -181,7 +183,7 @@ class MakeCommand extends Command
 
 
     /**
-     * Set the virtual machine's IP address setting in the Homestead.yaml file.
+     * Set the virtual machine's IP address setting in the mockingj.yaml file.
      *
      * @param  string $ip
      *
@@ -189,8 +191,8 @@ class MakeCommand extends Command
      */
     protected function updateIpAddress($ip)
     {
-        file_put_contents($this->basePath . '/Homestead.yaml',
-            str_replace('ip: "192.168.10.10"', 'ip: "' . $ip . '"',
+        file_put_contents($this->basePath . '/mockingj.yaml',
+            str_replace('ip: "192.168.20.20"', 'ip: "' . $ip . '"',
                 $this->getMockingjFile()));
     }
 

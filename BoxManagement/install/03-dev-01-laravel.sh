@@ -35,5 +35,5 @@ function setup_laravel() {
 
 
 script_started
-setup_laravel
+#setup_laravel
 script_ended
