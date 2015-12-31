@@ -28,13 +28,13 @@ function install_guest_additions() {
 
 function install_misc_utilities() {
   installed=$( yum list installed | grep "expect" )
-  if [[ "${installed}" != "" ]]
+  if [[ "${installed}" = "" ]]
   then
-    warning "Misc packages already installed. \n\tSkipping..."
-  else
     progress "Updating misc packages" && \
       sudo yum groupinstall -y "Development Tools" && \
       sudo yum install -y expect yum-utils
+  else
+    warning "Misc packages already installed. \n\tSkipping..."
   fi
 }
 
@@ -56,13 +56,13 @@ function misc_configuration() {
   # Clean up old kernel versions and keep only 2 most recent kernels
   progress "Cleaning up old kernels..."
   limit=$(grep -e 'installonly_limit=2' /etc/yum.conf)
-  if [[ "${limit}" != "" ]]
+  if [[ "${limit}" = "" ]]
   then
-    warning "Old kernel limit already set. \n\tSkipping..."
-  else
     sudo package-cleanup --oldkernels --count=2 && \
       sudo sed -ri 's/(installonly_limit)=5/\1=2/' /etc/yum.conf && \
       progress "Kernel limit set to 2."
+  else
+    warning "Old kernel limit already set. \n\tSkipping..."
   fi
 
 }

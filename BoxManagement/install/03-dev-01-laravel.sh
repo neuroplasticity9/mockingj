@@ -25,7 +25,7 @@ function install_laravel() {
 #  fi
 
   mkdir -p "${HOME}/shared/" && \
-  composer -vvv create-project laravel/laravel ${installation_path} ${laravel_version} && \
+  composer create-project laravel/laravel ${installation_path} ${laravel_version} && \
     progress "Laravel ${laravel_version} installed at ${installation_path}."
 }
 
