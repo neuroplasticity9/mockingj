@@ -11,9 +11,7 @@ SSH_FOLDER="/home/vagrant/.ssh"
 SSH_AUTH="${SSH_FOLDER}/authorized_keys"
 
 function get_vagrant_key_from() {
-  if [[ "$1" = "" ]]; then
-    error_exit "{$FUNCNAME} require one argument."
-  fi
+  [[ "$1" = "" ]] && error_exit "{$FUNCNAME} require one argument."
 
   if [[ "$1" = "local" ]]; then
     get_local_vagrant_key
