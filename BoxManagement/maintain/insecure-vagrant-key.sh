@@ -7,11 +7,14 @@ SCRIPT_DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$SCRIPT_DIR" ]]; then SCRIPT_DIR="$PWD"; fi
 source "${SCRIPT_DIR}/../library.sh"
 
-SSH_FOLDER="/home/vagrant/.ssh"
+SSH_FOLDER="${HOME}/.ssh"
 SSH_AUTH="${SSH_FOLDER}/authorized_keys"
 
 function get_vagrant_key_from() {
-  [[ "$1" = "" ]] && error_exit "{$FUNCNAME} require one argument."
+  if [[ "$1" = "" ]]
+  then
+    error_exit "{$FUNCNAME} require one argument."
+  fi
 
   if [[ "$1" = "local" ]]; then
     get_local_vagrant_key
@@ -41,15 +44,13 @@ function get_remote_vagrant_key() {
 function set_folders_permission() {
   chmod 700 ${SSH_FOLDER} && \
     progress "Folder permission changed to 700: $SSH_FOLDER" && \
-    chmod 600 ${SSH_FOLDER}/authorized_keys && progress "File permission changed to 600: $SSH_AUTH"
+    chmod 600 ${SSH_AUTH} && progress "File permission changed to 600: $SSH_AUTH"
 }
 
 function main() {
-  if [[ ! -d ${SSH_FOLDER} ]]; then
-    mkdir -p ${SSH_FOLDER}
-  fi
-  get_vagrant_key_from $1
-  set_folders_permission
+  mkdir -p ${SSH_FOLDER} && \
+    get_vagrant_key_from $1
+    set_folders_permission
 }
 
 script_started

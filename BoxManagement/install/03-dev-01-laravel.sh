@@ -10,23 +10,18 @@ function install_laravel() {
   installation_path="${HOME}/shared/laravel51"
   laravel_version="5.1.*"
 
-#  # Case if directory exists
-#  if [[ -d "${installation_path}" ]]
-#  then
-#    # If exist and not empty
-#    if [[ ! "$( ls -A "${installation_path}" )" ]]
-#    then
-#      rm -rf "${installation_path}" && \
-#        progress "Removed directory: ${installation_path}"
-#    else
-#      rm -rf "${installation_path}" && \
-#        progress "Removed empty directory: ${installation_path}"
-#    fi
-#  fi
+  # Case if directory exists and not empty
+  if [[ -d "${installation_path}" && "$( ls -A "${installation_path}" )" != "" ]]
+  then
+    cd ${installation_path} && composer -vv update && \
+      progress "Laravel 5.1 updated at ${installation_path}"
+  else
+    mkdir -p "${HOME}/shared/" && \
+      cd ${installation_path}/.. && \
+      composer -vv create-project "laravel/laravel" "laravel51" "${laravel_version}" && \
+      progress "Laravel ${laravel_version} installed at ${installation_path}."
+  fi
 
-  mkdir -p "${HOME}/shared/" && \
-  composer create-project laravel/laravel ${installation_path} ${laravel_version} && \
-    progress "Laravel ${laravel_version} installed at ${installation_path}."
 }
 
 function configure_laravel() {
