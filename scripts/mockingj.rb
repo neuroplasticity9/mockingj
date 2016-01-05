@@ -14,7 +14,7 @@ class Mockingj
 
     # Configure The Box
     config.vm.box = settings["box"] ||= "justinmoh/mockingj"
-    config.vm.box_version = settings["version"] ||= ">= 0"
+    config.vm.box_version = settings["version"] ||= ">= 0.4.7"
     config.vm.hostname = settings["hostname"] ||= "mockingj"
 
     # Configure A Private Network IP
@@ -37,7 +37,7 @@ class Mockingj
       vb.customize ["modifyvm", :id, "--ostype", "RedHat_64"]
     end
 
-    # Configure A Few VMware Settings
+   # Configure A Few VMware Settings
     ["vmware_fusion", "vmware_workstation"].each do |vmware|
       config.vm.provider vmware do |v|
         v.vmx["displayName"] = "mockingj"

@@ -26,38 +26,32 @@ Mockingj is a wrapper of `vagrant` command, developed to be used together with [
 1) Add vagrant box
 
 ```bash
-vagrant box add justinmoh/mockingj
+vagrant box add --box-version 0.4.7 justinmoh/mockingj
 ```
 
 2) Get `mockingj` with composer
 
 ```bash
-composer global require justinmoh/mockingj
+composer global require justinmoh/mockingj=^1.0.11
 ```
 
 3) Init the application
 
 ```bash
-cd ~/.composer/vendor/justinmoh/mockingj/ && bash init.sh
+cd ~/.composer/vendor/justinmoh/mockingj/ && sh init.sh
 ```
 
-4) Accessing Mockingj globally
-
-```
-echo 'alias mockingj="function __mockingj() { (cd ~/.composer/vendor/justinmoh/mockingj && vagrant \$*); unset -f __mockingj; }; __mockingj"' >> ~/.bash_profile && source ~/.bash_profile
-```
-
-5) Configure
+4) Configure
 
 ```bash
 open ~/.mockingj/mockingj.yaml
 ```
 
-6) Edit `/etc/hosts` in host (local) machine and add the following:
+5) Edit `/etc/hosts` in host (local) machine and add the following:
 
 > 192.168.20.20     mockingj.dev
 
-7) UP!
+6) UP!
 
 ```bash
 mockingj up

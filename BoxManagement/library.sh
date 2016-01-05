@@ -287,18 +287,3 @@ function substitute_or_print_warning() {
   fi
 
 }
-
-spinner() {
-  local pid=$!
-  local delay=0.75
-  local spinstr='...'
-  echo " "
-  while [ "$( ps a | awk '{print $1}' | grep $pid )" ]; do
-    local temp=${spinstr#?}
-    printf "%s  " "$spinstr"
-    local spinstr=${temp}${spinstr%"${temp}"}
-    sleep ${delay}
-    printf "\b\b\b"
-  done
-  printf "    \b\b\b\b"
-}
